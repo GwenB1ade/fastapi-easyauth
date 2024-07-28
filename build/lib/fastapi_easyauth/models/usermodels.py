@@ -42,8 +42,31 @@ class FullUserModel(UserBaseModel):
         min_len_last_name = 3
         max_len_last_name = 15
         
+    
+    def __init__(
+        self,
+        username: str,
+        password: str,
+        email: str = None,
+        first_name: str = None,
+        last_name: str = None,
+        refresh_token: str = None,
+        role: str = None,
+    ):
+            self.username = username
+            self.password = password
+            self.email = email
+            self.first_name = first_name
+            self.last_name = last_name
+            self.refresh_token = refresh_token
+            self.role = role
+        
         
 
 
 class UserModelR(UserBaseModel):
     refresh_token: Mapped[Optional[str]]
+    
+    def __init__(self, username: str, password: str, email: str = None, refresh_token: str = None):
+        super().__init__(username, password, email)
+        self.refresh_token = refresh_token

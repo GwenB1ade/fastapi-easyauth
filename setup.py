@@ -8,7 +8,7 @@ def readme():
 
 setup(
   name='fastapi-easyauth',
-  version='0.3.0',
+  version='0.3.2',
   author='duckduck',
   author_email='dimondtp@gmail.com',
   description='A library for quickly creating authentication using JWT and Cookies. Or storing a JWT token in a session',

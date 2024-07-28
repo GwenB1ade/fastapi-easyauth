@@ -18,9 +18,15 @@ class UserBaseModel:
     email: Mapped[str] = mapped_column(nullable = True, unique = True)
     
     
-    def validate(self) -> tuple[bool, str]: 
-        if self.ValidateConfig.min_lenght_username > len(self.username) or len(self.username) > self.ValidateConfig.max_lenght_username:
-            return (False, f'The user name must be between {self.ValidateConfig.min_lenght_username} and {self.ValidateConfig.max_lenght_username} characters long')
+    def validate(self) -> tuple[bool, str]:
+        if type(self.username) is not str:
+            username = self.username[0]
+            if self.ValidateConfig.min_lenght_username > len(username) or len(username) > self.ValidateConfig.max_lenght_username:
+                return (False, f'The user name must be between {self.ValidateConfig.min_lenght_username} and {self.ValidateConfig.max_lenght_username} characters long')
+        
+        else:
+            if self.ValidateConfig.min_lenght_username > len(self.username) or len(self.username) > self.ValidateConfig.max_lenght_username:
+                return (False, f'The user name must be between {self.ValidateConfig.min_lenght_username} and {self.ValidateConfig.max_lenght_username} characters long')
             
         if self.ValidateConfig.min_lenght_password > len(self.password) or len(self.password) > self.ValidateConfig.max_lenght_password:
             return (False, f'The password must be between {self.ValidateConfig.min_lenght_password} and {self.ValidateConfig.max_lenght_password} characters long')
@@ -39,7 +45,12 @@ class UserBaseModel:
         return (True, f'The data has been validated')
         
             
+        
     
+    def __init__(self, username: str, password: str, email: str = None):
+        self.username = username,
+        self.password = password,
+        self.email = email
     
     class ValidateConfig(BaseValidateConfig):
         pass
