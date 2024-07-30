@@ -55,7 +55,11 @@ class SessionAuth:
         
         user = request.session.get(self.name)
         if user:
-            return self.jwt.decode_token(user, full = False)
+            try:    
+                return self.jwt.decode_token(user, full = False)
+            
+            except:
+                return False
         
         else: return False
     
@@ -110,7 +114,7 @@ def unauthorized_json_response() -> JSONResponse:
     )
 
 
-def only_auth(func):
+def only_auth(func, auth: SessionAuth):
     """Checks if the user is logged in, if not, returns the unauthorized_json_response function
 
     Args:
@@ -126,7 +130,7 @@ def only_auth(func):
             class RequestNotAdded(Exception): ...
             raise RequestNotAdded('You forgot to add a request to your endpoint. Checking whether the user is authorized cannot be performed from the request. The required name is request')
 
-        if SessionAuth.active_user(request) is False:
+        if auth.active_user(request) is False:
             return unauthorized_json_response()
         
         else:
@@ -135,7 +139,7 @@ def only_auth(func):
     return wrapper
 
 
-def async_only_auth(func):
+def async_only_auth(func, auth: SessionAuth):
     """Asynchronous version of the only_auth function
 
     Args:
@@ -150,7 +154,7 @@ def async_only_auth(func):
             class RequestNotAdded(Exception): ...
             raise RequestNotAdded('You forgot to add a request to your endpoint. Checking whether the user is authorized cannot be performed from the request. The required name is request')
 
-        if SessionAuth.active_user(request) is False:
+        if auth.active_user(request) is False:
             return unauthorized_json_response()
         
         else:
